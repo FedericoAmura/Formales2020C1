@@ -147,12 +147,19 @@
   (cond (= (count lis) val-esperado) val-esperado
         (< (count lis) val-esperado) (list '*error* 'too-few-args)
         (> (count lis) val-esperado) (list '*error* 'too-many-args)
-        ))
+        )
+  )
 
 ; Compara la igualdad de dos simbolos.
 ; Recibe dos simbolos a y b. Retorna true si se deben considerar iguales; si no, false.
 ; Se utiliza porque TLC-LISP no es case-sensitive y ademas no distingue entre nil y la lista vacia.
-(defn igual? [a b] (println "TODO igual? a b"))
+(defn falsy? [v] (or (= v ()) (= v 'NIL) (= v "NIL")))
+(defn igual? [a b]
+  (cond (falsy? a) (igual? nil b)
+        (falsy? b) (igual? a nil)
+        true (= a b)
+        )
+  )
 
 ; Imprime, con salto de linea, atomos o listas en formato estandar (las cadenas con comillas) y devuelve su valor. Muestra errores sin parentesis.
 ; Aridad 1: Si recibe un escalar, lo imprime con salto de linea en formato estandar (pero si es \space no lo imprime), purga la salida y devuelve el escalar.

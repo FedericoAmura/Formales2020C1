@@ -196,7 +196,11 @@
 
 ; Revisa una lista que representa una funcion.
 ; Recibe la lista y, si esta comienza con '*error*, la retorna. Si no, retorna nil.
-(defn revisar-f [lis] (println "TODO revisar-f lis"))
+(defn revisar-f [lis]
+  (cond (and (seq? lis) (= '*error* (first lis))) lis
+        true nil
+        )
+  )
 
 ; Revisa una lista de argumentos evaluados.
 ; Recibe la lista y, si esta contiene alguna sublista que comienza con '*error*, retorna esa sublista. Si no, retorna nil.

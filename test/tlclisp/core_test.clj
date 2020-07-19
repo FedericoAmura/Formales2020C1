@@ -48,3 +48,12 @@
 (deftest actualizar-amb-update-value
   (testing "Should update value if present"
     (is (= '(+ add - sub x 3 y 2) (actualizar-amb '(+ add - sub x 1 y 2) 'x 3)))))
+
+; revisar-f
+(deftest revisar-f-literal
+  (testing "Should return nil"
+    (is (= nil (revisar-f 'doble)))))
+
+(deftest revisar-f-error
+  (testing "Should return error"
+    (is (= '(*error* too-few-args) (revisar-f '(*error* too-few-args))))))

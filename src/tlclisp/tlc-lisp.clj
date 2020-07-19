@@ -140,4 +140,5 @@
 
 ; Falta implementar las 9 funciones auxiliares (actualizar-amb, controlar-aridad, imprimir, buscar, etc.)
 
-; Falta hacer que la carga del interprete en Clojure (tlc-lisp.clj) retorne true
+; Al terminar de cargar el archivo, se retorna true.
+true

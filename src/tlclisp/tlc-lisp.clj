@@ -168,8 +168,19 @@
 ; Aridad 2: Si el primer parametro es nil, imprime un salto de linea, purga la salida y devuelve el segundo parametro.
 ; Si no, imprime su primer elemento en formato estandar, imprime un espacio y se llama recursivamente con la cola del primer parametro y el segundo intacto.
 (defn imprimir
-  ([elem] (println "TODO imprimir elem"))
-  ([lis orig] (println "TODO imprimir lis orig"))
+  ([elem]
+   (cond (and (seq? elem) (= '*error* (first elem))) (imprimir elem elem)
+         (= elem \space) \space
+         true (do (prn elem) (flush) elem)
+         )
+   )
+  ([lis orig]
+   (cond (igual? lis nil) (do (prn) (flush) orig)
+         true (do
+                (pr (first lis)) (print \space)
+                (imprimir (if (= (count lis) 0) nil (pop lis)) orig))
+         )
+   )
   )
 
 ; Actualiza un ambiente (una lista con claves en las posiciones impares [1, 3, 5...] y valores en las pares [2, 4, 6...]

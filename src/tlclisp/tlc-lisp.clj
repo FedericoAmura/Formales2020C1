@@ -143,7 +143,11 @@
 ; Recibe una lista y un numero. Si la longitud de la lista coincide con el numero, retorna el numero.
 ; Si es menor, retorna (list '*error* 'too-few-args).
 ; Si es mayor, retorna (list '*error* 'too-many-args).
-(defn controlar-aridad [lis val-esperado] (println "TODO controlar-aridad"))
+(defn controlar-aridad [lis val-esperado]
+  (cond (= (count lis) val-esperado) val-esperado
+        (< (count lis) val-esperado) (list '*error* 'too-few-args)
+        (> (count lis) val-esperado) (list '*error* 'too-many-args)
+        ))
 
 ; Compara la igualdad de dos simbolos.
 ; Recibe dos simbolos a y b. Retorna true si se deben considerar iguales; si no, false.

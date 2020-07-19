@@ -187,7 +187,12 @@
 ; Recibe el ambiente, la clave y el valor.
 ; Si el valor no es escalar y en su primera posicion contiene '*error*, retorna el ambiente intacto.
 ; Si no, coloca la clave y el valor en el ambiente (puede ser un alta o una actualizacion) y lo retorna.
-(defn actualizar-amb [amb-global clave valor] (println "TODO actualizar-amb amb-global clave valor"))
+(defn actualizar-amb [amb-global clave valor]
+  (cond (and (seq? valor) (= (first valor) '*error*)) amb-global
+        (< (.indexOf amb-global clave) 0) (concat amb-global (list clave valor)) ; nuevo valor, concatenamos
+        true (concat (take (.indexOf amb-global clave) amb-global) (list clave valor) (take-last (- (count amb-global) (.indexOf amb-global clave) 2) amb-global))
+        )
+  )
 
 ; Revisa una lista que representa una funcion.
 ; Recibe la lista y, si esta comienza con '*error*, la retorna. Si no, retorna nil.

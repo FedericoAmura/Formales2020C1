@@ -39,3 +39,12 @@
 (deftest igual?-lista-string
   (testing "true = (igual? () 'NIL)"
     (is (= true (igual? () 'NIL)))))
+
+; actualizar-amb
+(deftest actualizar-amb-new-value
+  (testing "Should add value if new"
+    (is (= '(+ add - sub x 1) (actualizar-amb '(+ add - sub) 'x 1)))))
+
+(deftest actualizar-amb-update-value
+  (testing "Should update value if present"
+    (is (= '(+ add - sub x 3 y 2) (actualizar-amb '(+ add - sub x 1 y 2) 'x 3)))))

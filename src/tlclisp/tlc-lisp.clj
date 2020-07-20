@@ -10,6 +10,7 @@
 (declare buscar)
 (declare evaluar-cond)
 (declare evaluar-secuencia-en-cond)
+(defn esError? [lis] (= '*error* (first lis)))
 
 ; REPL (read–eval–print loop).
 ; Aridad 0: Muestra mensaje de bienvenida y se llama recursivamente con el ambiente inicial.
@@ -169,7 +170,7 @@
 ; Si no, imprime su primer elemento en formato estandar, imprime un espacio y se llama recursivamente con la cola del primer parametro y el segundo intacto.
 (defn imprimir
   ([elem]
-   (cond (and (seq? elem) (= '*error* (first elem))) (imprimir elem elem)
+   (cond (and (seq? elem) (esError? elem)) (imprimir elem elem)
          (= elem \space) \space
          true (do (prn elem) (flush) elem)
          )
@@ -188,7 +189,7 @@
 ; Si el valor no es escalar y en su primera posicion contiene '*error*, retorna el ambiente intacto.
 ; Si no, coloca la clave y el valor en el ambiente (puede ser un alta o una actualizacion) y lo retorna.
 (defn actualizar-amb [amb-global clave valor]
-  (cond (and (seq? valor) (= (first valor) '*error*)) amb-global
+  (cond (and (seq? valor) (esError? valor)) amb-global
         (< (.indexOf amb-global clave) 0) (concat amb-global (list clave valor)) ; nuevo valor, concatenamos
         true (concat (take (.indexOf amb-global clave) amb-global) (list clave valor) (take-last (- (count amb-global) (.indexOf amb-global clave) 2) amb-global))
         )
@@ -197,14 +198,16 @@
 ; Revisa una lista que representa una funcion.
 ; Recibe la lista y, si esta comienza con '*error*, la retorna. Si no, retorna nil.
 (defn revisar-f [lis]
-  (cond (and (seq? lis) (= '*error* (first lis))) lis
+  (cond (and (seq? lis) (esError? lis)) lis
         true nil
         )
   )
 
 ; Revisa una lista de argumentos evaluados.
 ; Recibe la lista y, si esta contiene alguna sublista que comienza con '*error*, retorna esa sublista. Si no, retorna nil.
-(defn revisar-lae [lis] (println "TODO revisar-lae lis"))
+(defn revisar-lae [lis]
+  (cond (some (every-pred seq? esError?) lis) (first (filter (every-pred seq? esError?) lis))
+        true nil))
 
 ; Busca una clave en un ambiente (una lista con claves en las posiciones impares [1, 3, 5...] y valores en las pares [2, 4, 6...] y retorna el valor asociado.
 ; Si no la encuentra, retorna una lista con '*error* en la 1ra. pos., 'unbound-symbol en la 2da. y el elemento en la 3ra.

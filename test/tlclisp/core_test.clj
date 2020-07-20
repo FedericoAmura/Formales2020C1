@@ -50,10 +50,21 @@
     (is (= '(+ add - sub x 3 y 2) (actualizar-amb '(+ add - sub x 1 y 2) 'x 3)))))
 
 ; revisar-f
-(deftest revisar-f-literal
+(deftest revisar-f-valid
   (testing "Should return nil"
     (is (= nil (revisar-f 'doble)))))
 
 (deftest revisar-f-error
   (testing "Should return error"
     (is (= '(*error* too-few-args) (revisar-f '(*error* too-few-args))))))
+
+; revisar-lae
+(deftest revisar-lae-valid
+  (testing "Should return nil"
+    (is (= nil (revisar-lae '(1 add first))))))
+
+(deftest revisar-lae-error
+  (testing "Should return error"
+    (is (= '(*error* too-many-args) (revisar-lae '(1 add (*error* too-many-args) first))))))
+
+

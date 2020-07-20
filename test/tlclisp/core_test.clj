@@ -67,4 +67,12 @@
   (testing "Should return error"
     (is (= '(*error* too-many-args) (revisar-lae '(1 add (*error* too-many-args) first))))))
 
+; buscar
+(deftest buscar-valid
+  (testing "Should return sub"
+    (is (= 'sub  (buscar '- '(+ add - sub))))))
+
+(deftest buscar-error
+  (testing "Should return error"
+    (is (= '(*error* unbound-symbol doble) (buscar 'doble '(+ add - sub))))))
 

@@ -211,7 +211,11 @@
 
 ; Busca una clave en un ambiente (una lista con claves en las posiciones impares [1, 3, 5...] y valores en las pares [2, 4, 6...] y retorna el valor asociado.
 ; Si no la encuentra, retorna una lista con '*error* en la 1ra. pos., 'unbound-symbol en la 2da. y el elemento en la 3ra.
-(defn buscar [elem lis] (println "TODO buscar elem lis"))
+(defn buscar [elem lis]
+  (cond (< (.indexOf (flatten (partition 1 2 lis)) elem) 0) (list '*error* 'unbound-symbol elem) ; hacemos el partition para buscar solo sobre las claves
+        true (nth lis (+ 1 (* 2 (.indexOf (flatten (partition 1 2 lis)) elem))))
+        )
+  )
 
 ; Evalua el cuerpo de una macro COND. Siempre retorna una lista con un resultado y un ambiente.
 ; Recibe una lista de sublistas (cada una de las cuales tiene una condicion en su 1ra. posicion) y los ambientes global y local

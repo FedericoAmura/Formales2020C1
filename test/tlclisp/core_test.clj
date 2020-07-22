@@ -31,6 +31,19 @@
   (testing "Should return lambda function parameter value"
     (is (= '(6 (+ add)) (evaluar '((lambda (x) (+ x x)) 3) '(+ add) nil)))))
 
+; aplicar
+(deftest aplicar-cons
+  (testing "Should return function result"
+    (is (= '((a b) (cons cons)) (aplicar 'cons '(a (b)) '(cons cons) nil)))))
+
+(deftest aplicar-function
+  (testing "Should return function result"
+    (is (= '(9 (+ add r 5)) (aplicar 'add '(4 5) '(+ add r 5) nil)))))
+
+(deftest aplicar-lambda
+  (testing "Should return lambda result"
+    (is (= '(8 (+ add r 4 doble (lambda (x) (+ x x)))) (aplicar '(lambda (x) (+ x x)) '(4) '(+ add r 4 doble (lambda (x) (+ x x))) nil)))))
+
 ; controlar-aridad
 (deftest controlar-aridad-few-arguments
   (testing "Should return too few arguments if that happens"

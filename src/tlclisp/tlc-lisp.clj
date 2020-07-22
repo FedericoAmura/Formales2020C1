@@ -125,6 +125,7 @@
                                           (list '*error* 'too-few-args)
                                           (try (reduce + lae)
                                                (catch Exception e (list '*error* 'number-expected))))
+                        (igual? f 'cons) (apply cons lae)
                         true (let [lamb (buscar f (concat amb-local amb-global))]
                                (cond (or (number? lamb) (igual? lamb 't) (igual? lamb nil)) (list '*error* 'non-applicable-type lamb)
                                      (or (number? f) (igual? f 't) (igual? f nil)) (list '*error* 'non-applicable-type f)

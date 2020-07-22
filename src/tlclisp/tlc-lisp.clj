@@ -154,11 +154,12 @@
 ; Compara la igualdad de dos simbolos.
 ; Recibe dos simbolos a y b. Retorna true si se deben considerar iguales; si no, false.
 ; Se utiliza porque TLC-LISP no es case-sensitive y ademas no distingue entre nil y la lista vacia.
-(defn falsy? [v] (or (= v ()) (= v 'NIL) (= v "NIL")))
+(defn falsy? [v] (or (= v ()) (if (or (symbol? v) (string? v)) (= (clojure.string/lower-case v) "nil") false)))
+(defn lower [s] (if (or (symbol? s) (string? s)) (clojure.string/lower-case s) s))
 (defn igual? [a b]
   (cond (falsy? a) (igual? nil b)
         (falsy? b) (igual? a nil)
-        true (= a b)
+        true (= (lower a) (lower b))
         )
   )
 

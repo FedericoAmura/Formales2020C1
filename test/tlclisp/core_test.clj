@@ -2,6 +2,35 @@
   (:require [clojure.test :refer :all]
             [tlclisp.core :refer :all]))
 
+; evaluar
+(deftest evaluar-return-value-set
+  (testing "Should return value returned by setq"
+    (is (= '(3 (+ add r 3)) (evaluar '(setq r 3) '(+ add) nil)))))
+
+(deftest evaluar-return-function
+  (testing "Should return defined function"
+    (is (= '(doble (+ add doble (lambda (x) (+ x x)))) (evaluar '(de doble (x) (+ x x)) '(+ add) nil)))))
+
+(deftest evaluar-return-value-calc
+  (testing "Should return value calculated"
+    (is (= '(5 (+ add)) (evaluar '(+ 2 3) '(+ add) nil)))))
+
+(deftest evaluar-unbound-symbol
+  (testing "Should return error unbound-symbol"
+    (is (= '((*error* unbound-symbol +) (add add)) (evaluar '(+ 2 3) '(add add) nil)))))
+
+(deftest evaluar-lambda
+  (testing "Should return lambda calculated value"
+    (is (= '(6 (+ add doble (lambda (x) (+ x x)))) (evaluar '(doble 3) '(+ add doble (lambda (x) (+ x x))) nil)))))
+
+(deftest evaluar-lambda-variable
+  (testing "Should return lambda using env variable"
+    (is (= '(8 (+ add r 4 doble (lambda (x) (+ x x)))) (evaluar '(doble r) '(+ add r 4 doble (lambda (x) (+ x x))) nil)))))
+
+(deftest evaluar-lambda-parameter
+  (testing "Should return lambda function parameter value"
+    (is (= '(6 (+ add)) (evaluar '((lambda (x) (+ x x)) 3) '(+ add) nil)))))
+
 ; controlar-aridad
 (deftest controlar-aridad-few-arguments
   (testing "Should return too few arguments if that happens"

@@ -126,6 +126,25 @@
                                           (try (reduce + lae)
                                                (catch Exception e (list '*error* 'number-expected))))
                         (igual? f 'cons) (apply cons lae)
+                        (igual? f 'append) (concat (first lae) (fnext lae))
+                        (igual? f 'list) lae
+                        (igual? f 'length) (count (first lae))
+                        (igual? f 'reverse) (reverse (first lae))
+                        (igual? f 'rest) (next (first lae))
+                        (igual? f '+) (apply + lae)
+                        (igual? f 'sub) (apply - lae)
+                        (igual? f '-) (apply - lae)
+                        (igual? f 'equal) (if (igual? (first lae) (fnext lae)) 't nil)
+                        (igual? f 'null) (if (igual? (first lae) nil) 't nil)
+                        (igual? f 'lt) (if (< (first lae) (fnext lae)) 't nil)
+                        (igual? f 'ge) (if (>= (first lae) (fnext lae)) 't nil)
+                        (igual? f 'gt) (if (> (first lae) (fnext lae)) 't nil)
+                        (igual? f 'not) (cond (igual? (first lae) 't) nil
+                                              (igual? (first lae) nil) 't
+                                              true (list '*error* 'no-boolean-value))
+                        (igual? f 'read) (read)
+                        (igual? f 'prin3) (do (pr (first lae)) (first lae))
+                        (igual? f 'terpri) (prn)
                         true (let [lamb (buscar f (concat amb-local amb-global))]
                                (cond (or (number? lamb) (igual? lamb 't) (igual? lamb nil)) (list '*error* 'non-applicable-type lamb)
                                      (or (number? f) (igual? f 't) (igual? f nil)) (list '*error* 'non-applicable-type f)

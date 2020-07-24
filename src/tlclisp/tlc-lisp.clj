@@ -92,6 +92,10 @@
                                                (and (not (igual? (fnext expre) nil)) (not (seq? (fnext expre)))) (list (list '*error* 'list 'expected (fnext expre)) amb-global)
                                                true (list expre amb-global))
           (igual? (first expre) 'cond) (evaluar-cond (next expre) amb-global amb-local)
+          (igual? (first expre) 'load) (cond (< (count (next expre)) 1) (list (list '*error* 'too-few-args) amb-global)
+                                             (= (count (next expre)) 2) (list (list '*error* 'not-implemented) amb-global)
+                                             (> (count (next expre)) 2) (list (list '*error* 'too-many-args) amb-global)
+                                             true (list nil (cargar-arch amb-global amb-local (fnext expre))))
           true (aplicar (first (evaluar (first expre) amb-global amb-local)) (map (fn [x] (first (evaluar x amb-global amb-local))) (next expre)) amb-global amb-local)))
   )
 

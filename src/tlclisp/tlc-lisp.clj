@@ -96,6 +96,16 @@
                                              (= (count (next expre)) 2) (list (list '*error* 'not-implemented) amb-global)
                                              (> (count (next expre)) 2) (list (list '*error* 'too-many-args) amb-global)
                                              true (list nil (cargar-arch amb-global amb-local (fnext expre))))
+          (igual? (first expre) 'if) (cond (< (count (next expre)) 1) (list (list '*error* 'list 'expected nil) amb-global)
+                                           true (let [res (evaluar (fnext expre) amb-global amb-local)]
+                                                  (cond (and (list? (first res)) (= (ffirst res) '*error*)) res
+                                                        (igual? (first res) nil) (evaluar (fnext (next (next expre))) (fnext res) amb-local)
+                                                        true (evaluar (fnext (next expre)) (fnext res) amb-local))))
+          (igual? (first expre) 'or) (cond (< (count (next expre)) 1) (list nil amb-global)
+                                           true (let [res (evaluar (fnext expre) amb-global amb-local)]
+                                                  (cond (and (list? (first res)) (= (ffirst res) '*error*)) res
+                                                        (igual? (first res) nil) (evaluar (cons 'or (next (next expre))) (fnext res) amb-local)
+                                                        true (list (first res) (fnext res)))))
           true (aplicar (first (evaluar (first expre) amb-global amb-local)) (map (fn [x] (first (evaluar x amb-global amb-local))) (next expre)) amb-global amb-local)))
   )
 
@@ -126,9 +136,9 @@
                                                   (not (seq? (first lae))) (list '*error* 'list 'expected (first lae))
                                                   true (ffirst lae)))
                         (or (igual? f 'add) (igual? f '+)) (if (< (count lae) 2)
-                                          (list '*error* 'too-few-args)
-                                          (try (reduce + lae)
-                                               (catch Exception e (list '*error* 'number-expected))))
+                                                             (list '*error* 'too-few-args)
+                                                             (try (reduce + lae)
+                                                                  (catch Exception e (list '*error* 'number-expected))))
                         (or (igual? f 'sub) (igual? f '-)) (if (< (count lae) 2)
                                                              (list '*error* 'too-few-args)
                                                              (try (reduce - lae)

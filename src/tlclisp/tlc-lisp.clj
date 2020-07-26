@@ -302,11 +302,19 @@
 ; Si la lista es nil, el resultado es nil y el ambiente retornado es el global.
 ; Si no, evalua (con evaluar) la cabeza de la 1ra. sublista y, si el resultado no es nil, retorna el res. de invocar a evaluar-secuencia-en-cond con la cola de esa sublista.
 ; En caso contrario, sigue con las demas sublistas.
-(defn evaluar-cond [lis amb-global amb-global amb-local] (println "TODO evaluar-cond lis amb-global amb-global amb-local"))
+(defn evaluar-cond [lis amb-global amb-local]
+  (cond (nil? lis) (list nil amb-global)
+        (not= (first (evaluar (ffirst lis) amb-global amb-local)) nil) (evaluar-secuencia-en-cond (next (first lis)) amb-global amb-local)
+        true (evaluar-cond (rest lis) amb-global amb-local)
+        )
+  )
 
 ; Evalua (con evaluar) secuencialmente las sublistas de una lista y retorna el valor de la ultima evaluacion.
-(defn evaluar-secuencia-en-cond [lis amb-global amb-local] (println "TODO evaluar-secuencia-en-cond lis amb-global amb-local"))
-
+(defn evaluar-secuencia-en-cond [lis amb-global amb-local]
+  (if (nil? (first lis)) (list nil amb-global) (let [res (evaluar (first lis) amb-global amb-local)]
+                                                 (cond (and (list? (first res)) (= (ffirst res) '*error)) res
+                                                       (= (count (next lis)) 0) res
+                                                       true (evaluar-secuencia-en-cond (next lis) (fnext res) amb-local)))))
 
 ; Al terminar de cargar el archivo, se retorna true.
 true

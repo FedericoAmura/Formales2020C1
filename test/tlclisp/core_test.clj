@@ -118,3 +118,28 @@
   (testing "Should return error"
     (is (= '(*error* unbound-symbol doble) (buscar 'doble '(+ add - sub))))))
 
+; evaluar-cond
+(deftest evaluar-cond-nil
+  (testing "Should return nil when nil lis"
+    (is (= '(nil (equal equal setq setq))  (evaluar-cond nil '(equal equal setq setq) nil)))))
+
+(deftest evaluar-cond-last-nil
+  (testing "Should return nil "
+    (is (= '(nil (equal equal first first)) (evaluar-cond '(((equal 'a 'b) (setq x 1))) '(equal equal first first) nil)))))
+
+(deftest evaluar-cond-1
+  (testing "Should return 2"
+    (is (= '(2 (equal equal setq setq y 2))  (evaluar-cond '(((equal 'a 'b) (setq x 1)) ((equal 'a 'a) (setq y 2))) '(equal equal setq setq) nil)))))
+
+(deftest evaluar-cond-2
+  (testing "Should return 3"
+    (is (= '(3 (equal equal setq setq y 2 z 3)) (evaluar-cond '(((equal 'a 'b) (setq x 1)) ((equal 'a 'a) (setq y 2) (setq z 3))) '(equal equal setq setq) nil)))))
+
+; evaluar-secuencia-en-cond
+(deftest evaluar-secuencia-en-cond-1
+  (testing "Should return 2"
+    (is (= '(2 (setq setq y 2))  (evaluar-secuencia-en-cond '((setq y 2)) '(setq setq) nil)))))
+
+(deftest evaluar-secuencia-en-cond-2
+  (testing "Should return 3"
+    (is (= '(3 (setq setq y 2 z 3)) (evaluar-secuencia-en-cond '((setq y 2) (setq z 3)) '(setq setq) nil)))))

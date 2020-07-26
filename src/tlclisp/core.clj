@@ -1,4 +1,4 @@
 (ns tlclisp.core)
-(load-file "./src/tlclisp/tlc-lisp.clj")
+(load-file "./src/tlclisp/tlclisp.clj")
 
-(repl)
+(tlclisp.tlclisp/repl)

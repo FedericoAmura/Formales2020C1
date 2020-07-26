@@ -5,11 +5,9 @@ See enunciado.pdf for requirements
 
 ## Usage
 
-First you have to import the Lisp REPL and then run it with the following commands
+Run the interpreter standing in project root and running the following command inside clojure
 
 ```clojure
-(load-file "./src/tlclisp/tlc-lisp.clj")
-
-(repl)
+(load-file "./src/tlclisp/core.clj")
 ```
 

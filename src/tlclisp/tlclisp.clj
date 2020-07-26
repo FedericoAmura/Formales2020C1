@@ -1,3 +1,5 @@
+(ns tlclisp.tlclisp)
+
 (declare evaluar)
 (declare aplicar)
 (declare controlar-aridad)

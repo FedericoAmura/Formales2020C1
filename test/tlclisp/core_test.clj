@@ -1,6 +1,6 @@
 (ns tlclisp.core-test
   (:require [clojure.test :refer :all]
-            [tlclisp.core :refer :all]))
+            [tlclisp.tlclisp :refer :all]))
 
 ; evaluar
 (deftest evaluar-return-value-set

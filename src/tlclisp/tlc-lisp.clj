@@ -203,7 +203,7 @@
                         (igual? f 'eval) (cond (< (count lae) 1) (list '*error* 'too-few-args)
                                                (> (count lae) 1) (list '*error* 'too-many-args)
                                                (not (list? (first lae))) (first lae)
-                                               true (first (aplicar (ffirst lae) (nfirst lae) amb-global amb-local)))
+                                               true (first (evaluar (first lae) amb-global amb-local)))
                         true (let [lamb (buscar f (concat amb-local amb-global))]
                                (cond (or (number? lamb) (igual? lamb 't) (igual? lamb nil)) (list '*error* 'non-applicable-type lamb)
                                      (or (number? f) (igual? f 't) (igual? f nil)) (list '*error* 'non-applicable-type f)

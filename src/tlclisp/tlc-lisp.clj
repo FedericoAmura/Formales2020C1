@@ -145,7 +145,7 @@
                                                                   (catch Exception e (list '*error* 'number-expected))))
                         (igual? f 'cons) (cond (< (count lae) 2) (list '*error* 'too-few-args)
                                                (> (count lae) 2) (list '*error* 'too-many-args)
-                                               (not (list? (fnext lae))) (list '*error* 'not-implemented)
+                                               ;(not (list? (fnext lae))) (list '*error* 'not-implemented)
                                                true (apply cons lae))
                         (igual? f 'append) (cond (< (count lae) 2) (list '*error* 'too-few-args)
                                                  (> (count lae) 2) (list '*error* 'too-many-args)
@@ -167,7 +167,7 @@
                                                (> (count lae) 2) (list '*error* 'too-many-args)
                                                (= (count lae) 2) (list '*error* 'not-implemented)
                                                (igual? (first lae) nil) nil
-                                               (not (list? (first lae))) (list '*error* 'list 'expected)
+                                               ;(not (list? (first lae))) (list '*error* 'list 'expected)
                                                true (next (first lae)))
                         (igual? f 'equal) (cond (= (count lae) 1) (list '*error* 'too-few-args)
                                                 (> (count lae) 2) (list '*error* 'too-many-args)
@@ -233,7 +233,7 @@
 ; Compara la igualdad de dos simbolos.
 ; Recibe dos simbolos a y b. Retorna true si se deben considerar iguales; si no, false.
 ; Se utiliza porque TLC-LISP no es case-sensitive y ademas no distingue entre nil y la lista vacia.
-(defn falsy? [v] (or (= v ()) (if (or (symbol? v) (string? v)) (= (clojure.string/lower-case v) "nil") false)))
+(defn falsy? [v] (or (= v ()) (if (or (symbol? v) (string? v)) (or (= (clojure.string/lower-case v) "nil") (= (clojure.string/lower-case v) "null")) false)))
 (defn lower [s] (if (or (symbol? s) (string? s)) (clojure.string/lower-case s) s))
 (defn igual? [a b]
   (cond (falsy? a) (igual? nil b)
@@ -291,10 +291,13 @@
 
 ; Busca una clave en un ambiente (una lista con claves en las posiciones impares [1, 3, 5...] y valores en las pares [2, 4, 6...] y retorna el valor asociado.
 ; Si no la encuentra, retorna una lista con '*error* en la 1ra. pos., 'unbound-symbol en la 2da. y el elemento en la 3ra.
+(defn index-of [item coll]
+  (let [index (count (take-while (partial not= true) (map (fn [x] (igual? item x)) coll)))]
+    (if (< index (count coll)) index -1)))
 (defn buscar [elem lis]
-  (cond (< (.indexOf (flatten (partition 1 2 lis)) elem) 0) (list '*error* 'unbound-symbol elem) ; hacemos el partition para buscar solo sobre las claves
-        true (nth lis (+ 1 (* 2 (.indexOf (flatten (partition 1 2 lis)) elem))))
-        )
+  (let [index (index-of elem (flatten (partition 1 2 lis)))] ; hacemos el partition para buscar solo sobre las claves
+    (if (< index 0) (list '*error* 'unbound-symbol elem)
+                    (nth lis (+ 1 (* 2 index)))))
   )
 
 ; Evalua el cuerpo de una macro COND. Siempre retorna una lista con un resultado y un ambiente.

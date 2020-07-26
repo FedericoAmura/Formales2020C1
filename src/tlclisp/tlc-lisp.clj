@@ -196,7 +196,7 @@
                         (igual? f 'prin3) (cond (< (count lae) 1) (list '*error* 'too-few-args)
                                                 (= (count lae) 2) (list '*error* 'not-implemented)
                                                 (> (count lae) 2) (list '*error* 'too-many-args)
-                                                true (do (pr (first lae)) (first lae)))
+                                                true (do (pr (first lae)) (flush) (first lae)))
                         (igual? f 'terpri) (cond (= (count lae) 1) (list '*error* 'not-implemented)
                                                  (> (count lae) 1) (list '*error* 'too-many-args)
                                                  true (prn))
